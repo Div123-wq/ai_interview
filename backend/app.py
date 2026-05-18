@@ -28,7 +28,15 @@ def create_app():
     app.register_blueprint(interview_bp, url_prefix="/api/interview")
     app.register_blueprint(mentor_bp,    url_prefix="/api/mentor")
 
-    # ── Health Check ─────────────────────────────────────────────────────────
+    # ── Root & Health Check ────────────────────────────────────────────────────
+    @app.route("/")
+    def index():
+        return jsonify({
+            "status": "ok",
+            "message": "AI Interview Coach backend is running.",
+            "health_check": "/api/health"
+        }), 200
+
     @app.route("/api/health")
     def health():
         return jsonify({"status": "ok", "message": "AI Interview Coach API is running!"}), 200

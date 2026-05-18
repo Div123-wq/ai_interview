@@ -2,7 +2,16 @@ import sqlite3
 import os
 from datetime import datetime
 
-DATABASE_PATH = os.getenv("DATABASE_URL", "interview.db")
+DATABASE_URL = os.getenv("DATABASE_URL")
+if DATABASE_URL:
+    DATABASE_PATH = DATABASE_URL
+else:
+    temp_dir = os.getenv("TMPDIR") or os.getenv("TEMP") or os.getenv("TMP") or "/tmp"
+    if os.path.isdir(temp_dir):
+        DATABASE_PATH = os.path.join(temp_dir, "interview.db")
+    else:
+        DATABASE_PATH = "interview.db"
+
 
 def get_db():
     conn = sqlite3.connect(DATABASE_PATH)

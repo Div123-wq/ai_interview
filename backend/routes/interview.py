@@ -68,7 +68,7 @@ def submit_answer():
             header, b64 = webcam_b64.split(',', 1) if ',' in webcam_b64 else (None, webcam_b64)
             import base64, uuid
             img_data = base64.b64decode(b64)
-            uploads_dir = os.path.join(os.path.dirname(__file__), '..', 'uploads')
+            uploads_dir = os.getenv("UPLOADS_DIR") or os.path.join(os.getenv("TMPDIR") or "/tmp", "ai_interview_uploads")
             os.makedirs(uploads_dir, exist_ok=True)
             filename = f"webcam_{session_id}_{question_number}_{uuid.uuid4().hex}.png"
             path = os.path.join(uploads_dir, filename)
