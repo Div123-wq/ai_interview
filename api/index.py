@@ -1,7 +1,10 @@
-from app import app
+from backend.app import create_app
 
-# Export the Flask app for Vercel
+# Create and export the Flask app for Vercel
+app = create_app()
 application = app
 
 if __name__ == "__main__":
+    from backend.models.database import init_db
+    init_db()
     app.run()
