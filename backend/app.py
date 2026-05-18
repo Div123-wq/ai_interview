@@ -73,6 +73,19 @@ def create_app():
     def health():
         return jsonify({"status": "ok", "message": "AI Interview Coach API is running!"}), 200
 
+    # ── Diagnostic Endpoint (for debugging deployment issues) ────────────────
+    @app.route("/api/debug")
+    def debug():
+        import os
+        return jsonify({
+            "cwd": os.getcwd(),
+            "frontend_dir": frontend_dir,
+            "frontend_exists": os.path.isdir(frontend_dir),
+            "index_exists": os.path.isfile(os.path.join(frontend_dir, 'index.html')),
+            "app_dir": app_dir,
+            "python_path": os.environ.get("PYTHONPATH", "not set")
+        }), 200
+
     # ── Error Handlers ────────────────────────────────────────────────────────
     @app.errorhandler(404)
     def not_found(e):
