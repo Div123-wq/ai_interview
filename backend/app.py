@@ -1,5 +1,5 @@
 import os
-from flask import Flask, jsonify
+from flask import Flask, jsonify, send_from_directory, send_file
 from flask_cors import CORS
 from flask_jwt_extended import JWTManager
 from dotenv import load_dotenv
@@ -11,7 +11,10 @@ from backend.routes.mentor import mentor_bp
 load_dotenv()
 
 def create_app():
-    app = Flask(__name__)
+    # Resolve frontend directory relative to the backend module
+    frontend_dir = os.path.join(os.path.dirname(os.path.dirname(__file__)), 'frontend')
+    
+    app = Flask(__name__, static_folder=os.path.join(frontend_dir, 'js'), static_url_path='/js')
 
     # ── Config ──────────────────────────────────────────────────────────────
     app.config["JWT_SECRET_KEY"] = os.getenv("SECRET_KEY", "dev-secret-change-me")
@@ -28,14 +31,49 @@ def create_app():
     app.register_blueprint(interview_bp, url_prefix="/api/interview")
     app.register_blueprint(mentor_bp,    url_prefix="/api/mentor")
 
-    # ── Root & Health Check ────────────────────────────────────────────────────
+    # ── CSS Routes ──────────────────────────────────────────────────────────
+    @app.route('/css/<path:filename>')
+    def serve_css(filename):
+        css_dir = os.path.join(frontend_dir, 'css')
+        return send_from_directory(css_dir, filename)
+
+    # ── Frontend HTML Routes ────────────────────────────────────────────────
     @app.route("/")
     def index():
+        index_path = os.path.join(frontend_dir, 'index.html')
+        if os.path.isfile(index_path):
+            return send_file(index_path)
         return jsonify({
             "status": "ok",
             "message": "AI Interview Coach backend is running.",
             "health_check": "/api/health"
         }), 200
+
+    @app.route("/dashboard.html")
+    def dashboard():
+        dashboard_path = os.path.join(frontend_dir, 'dashboard.html')
+        if os.path.isfile(dashboard_path):
+            return send_file(dashboard_path)
+        return jsonify({"error": "Dashboard not found"}), 404
+
+    @app.route("/interview.html")
+    def interview():
+        interview_path = os.path.join(frontend_dir, 'interview.html')
+        if os.path.isfile(interview_path):
+            return send_file(interview_path)
+        return jsonify({"error": "Interview page not found"}), 404
+
+    @app.route("/mentor.html")
+    def mentor():
+        mentor_path = os.path.join(frontend_dir, 'mentor.html')
+        if os.path.isfile(mentor_path):
+            return send_file(mentor_path)
+        return jsonify({"error": "Mentor page not found"}), 404
+
+    # ── Favicon & Static Files ────────────────────────────────────────────────
+    @app.route("/favicon.ico")
+    def favicon():
+        return "", 204  # No content, prevents 404 errors
 
     @app.route("/api/health")
     def health():
