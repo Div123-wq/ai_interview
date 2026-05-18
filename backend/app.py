@@ -3,10 +3,10 @@ from flask import Flask, jsonify
 from flask_cors import CORS
 from flask_jwt_extended import JWTManager
 from dotenv import load_dotenv
-from models.database import init_db
-from routes.auth import auth_bp
-from routes.interview import interview_bp
-from routes.mentor import mentor_bp
+from backend.models.database import init_db
+from backend.routes.auth import auth_bp
+from backend.routes.interview import interview_bp
+from backend.routes.mentor import mentor_bp
 
 load_dotenv()
 
@@ -53,6 +53,10 @@ def create_app():
     return app
 
 
+# Expose the Flask app for deployment targets that expect a top-level app variable.
+app = create_app()
+
+
 if __name__ == "__main__":
     init_db()
     print("✅ Database initialized.")
@@ -71,5 +75,4 @@ if __name__ == "__main__":
     print("   GET  /api/mentor/insights")
     print("   POST /api/mentor/resume")
     print("   POST /api/mentor/linkedin-tips")
-    app = create_app()
     app.run(debug=True, host="0.0.0.0", port=5000)

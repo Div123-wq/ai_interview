@@ -1,5 +1,5 @@
 import sys; sys.path.append('.')
-from services.ai_engine import _call
+from backend.services.ai_engine import _call
 prompt = """You are an expert interviewer at a top tech company.
 Generate exactly 5 interview questions for a intermediate-level Software Engineer position.
 Interview type: technical.

@@ -1,15 +1,15 @@
 from flask import Blueprint, request, jsonify
 from flask_jwt_extended import jwt_required, get_jwt_identity
-from models.database import (
+from backend.models.database import (
     save_mentor_message, get_mentor_history, clear_mentor_history,
     get_user_by_id, create_goal, get_user_goals, update_goal_progress, delete_goal
 )
-from services.ai_engine import (
+from backend.services.ai_engine import (
     mentor_chat, analyze_skill_gap, generate_roadmap,
     get_industry_insights, review_resume, get_job_search_strategy,
     generate_prep_schedule, get_linkedin_tips
 )
-from services.resume_parser import extract_text_from_file
+from backend.services.resume_parser import extract_text_from_file
 
 mentor_bp = Blueprint("mentor", __name__)
 

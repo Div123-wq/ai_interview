@@ -1,10 +1,10 @@
 from flask import Blueprint, request, jsonify
 from flask_jwt_extended import jwt_required, get_jwt_identity
-from models.database import (
+from backend.models.database import (
     create_session, get_session, save_question_answer,
     finish_session, get_session_questions, get_user_sessions, get_user_stats
 )
-from services.ai_engine import generate_questions, evaluate_answer
+from backend.services.ai_engine import generate_questions, evaluate_answer
 import json
 import os
 
