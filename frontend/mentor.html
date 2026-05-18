@@ -1,0 +1,175 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Career Mentor — InterviewAI</title>
+  <link rel="stylesheet" href="css/style.css">
+  <style>
+    .mentor-layout { display: grid; grid-template-columns: 380px 1fr; height: calc(100vh - 64px); overflow: hidden; }
+    .mentor-sidebar { border-right: 1px solid var(--glass-border); display: flex; flex-direction: column; background: var(--bg2); }
+    .mentor-main { display: flex; flex-direction: column; overflow: hidden; }
+    .tool-panel-overlay { background: var(--bg2); border-left: 1px solid var(--glass-border); overflow-y: auto; }
+    @media(max-width:900px) {
+      .mentor-layout { grid-template-columns: 1fr; }
+      .mentor-sidebar { height: 50vh; border-right: none; border-bottom: 1px solid var(--glass-border); }
+    }
+  </style>
+</head>
+<body>
+
+<nav class="navbar">
+  <a class="nav-logo" href="index.html">🤖 InterviewAI</a>
+  <div class="nav-links">
+    <a href="dashboard.html" class="nav-link">Dashboard</a>
+    <a href="interview.html" class="nav-link">Interview</a>
+    <a href="mentor.html" class="nav-link active">Career Mentor</a>
+  </div>
+  <div class="nav-user">
+    <span class="nav-user-name" id="nav-user-name"></span>
+    <div class="nav-avatar" id="nav-avatar"></div>
+    <button class="btn btn-secondary btn-sm" id="logout-btn">Logout</button>
+  </div>
+</nav>
+
+<div class="mentor-layout">
+
+  <!-- ── Left: Chat Sidebar ── -->
+  <div class="mentor-sidebar">
+    <!-- Header -->
+    <div style="padding:20px;border-bottom:1px solid var(--glass-border)">
+      <div style="display:flex;align-items:center;gap:12px;margin-bottom:12px">
+        <div style="width:44px;height:44px;border-radius:50%;background:linear-gradient(135deg,var(--primary),var(--secondary));display:flex;align-items:center;justify-content:center;font-size:22px">🧭</div>
+        <div>
+          <div style="font-weight:700;font-size:15px">AI Career Mentor</div>
+          <div style="font-size:12px;color:var(--success);display:flex;align-items:center;gap:4px"><span style="width:6px;height:6px;background:var(--success);border-radius:50%;display:inline-block"></span> Always online</div>
+        </div>
+        <button onclick="clearChat()" style="margin-left:auto;background:none;color:var(--text3);font-size:18px;padding:4px" title="Clear chat" id="clear-chat-btn">🗑</button>
+      </div>
+      <!-- Quick Prompts -->
+      <div style="display:flex;flex-wrap:wrap;gap:6px">
+        <button class="btn btn-secondary btn-sm" onclick="quickPrompt('What skills do I need for my target role?')">Skills needed</button>
+        <button class="btn btn-secondary btn-sm" onclick="quickPrompt('How should I prepare for my interview this week?')">Prep plan</button>
+        <button class="btn btn-secondary btn-sm" onclick="quickPrompt('Give me tips to improve my resume for ATS.')">Resume tips</button>
+        <button class="btn btn-secondary btn-sm" onclick="quickPrompt('What salary can I expect as a fresher?')">Salary info</button>
+      </div>
+    </div>
+
+    <!-- Messages -->
+    <div class="chat-messages" id="chat-messages"></div>
+
+    <!-- Input -->
+    <div class="chat-input-bar">
+      <textarea class="chat-input" id="chat-input" placeholder="Ask your career mentor anything..." rows="1"></textarea>
+      <button class="btn btn-primary" id="send-btn" style="padding:12px 16px">➤</button>
+    </div>
+  </div>
+
+  <!-- ── Right: Tools Panel ── -->
+  <div class="mentor-main" style="overflow-y:auto">
+    <!-- Tools Grid (default view) -->
+    <div id="tools-default" style="padding:24px">
+      <div class="page-header">
+        <h2 class="page-title" style="font-size:22px">🛠 Career Tools</h2>
+        <p class="page-subtitle">Click any tool to get AI-powered career guidance</p>
+      </div>
+      <div class="tool-grid" style="grid-template-columns:repeat(auto-fill,minmax(200px,1fr))">
+        <button class="tool-btn" data-tool="skill-gap">
+          <div class="tool-btn-icon">🎯</div>
+          <div class="tool-btn-name">Skill Gap Analysis</div>
+          <div class="tool-btn-desc">Find missing skills for your target role</div>
+        </button>
+        <button class="tool-btn" data-tool="roadmap">
+          <div class="tool-btn-icon">🗺</div>
+          <div class="tool-btn-name">Learning Roadmap</div>
+          <div class="tool-btn-desc">Week-by-week personalized study plan</div>
+        </button>
+        <button class="tool-btn" data-tool="insights">
+          <div class="tool-btn-icon">📊</div>
+          <div class="tool-btn-name">Industry Insights</div>
+          <div class="tool-btn-desc">Salaries, trends, top companies</div>
+        </button>
+        <button class="tool-btn" data-tool="resume">
+          <div class="tool-btn-icon">📄</div>
+          <div class="tool-btn-name">Resume Review</div>
+          <div class="tool-btn-desc">ATS score + keyword optimization</div>
+        </button>
+        <button class="tool-btn" data-tool="job-strategy">
+          <div class="tool-btn-icon">💼</div>
+          <div class="tool-btn-name">Job Search Strategy</div>
+          <div class="tool-btn-desc">Platforms, networking, outreach templates</div>
+        </button>
+        <button class="tool-btn" data-tool="linkedin">
+          <div class="tool-btn-icon">🔵</div>
+          <div class="tool-btn-name">LinkedIn Tips</div>
+          <div class="tool-btn-desc">Headline, keywords, connection strategy</div>
+        </button>
+        <button class="tool-btn" data-tool="prep-schedule">
+          <div class="tool-btn-icon">📅</div>
+          <div class="tool-btn-name">Interview Prep Schedule</div>
+          <div class="tool-btn-desc">Countdown plan to your interview date</div>
+        </button>
+        <button class="tool-btn" data-tool="goals">
+          <div class="tool-btn-icon">🏆</div>
+          <div class="tool-btn-name">Goal Tracker</div>
+          <div class="tool-btn-desc">Set & track SMART career goals</div>
+        </button>
+      </div>
+
+      <!-- Certifications Banner -->
+      <div class="card" style="margin-top:24px;background:linear-gradient(135deg,rgba(99,102,241,0.15),rgba(6,182,212,0.1));border-color:var(--primary)">
+        <div style="display:flex;align-items:center;gap:16px;flex-wrap:wrap">
+          <div style="font-size:40px">🏅</div>
+          <div style="flex:1">
+            <div style="font-size:16px;font-weight:700;margin-bottom:4px">Get Certification Recommendations</div>
+            <p style="font-size:13px;color:var(--text2)">Ask the Career Mentor: "What certifications should I get for [your role]?"</p>
+          </div>
+          <button class="btn btn-primary" onclick="quickPrompt('What certifications should I get to boost my career as a ' + (Auth.getUser()?.target_role || 'Software Engineer') + '?')">Ask Mentor →</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- Tool Result Panel (hidden by default) -->
+    <div id="tool-panel" class="hidden" style="padding:24px">
+      <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:20px">
+        <button class="btn btn-secondary btn-sm" onclick="closeTool()">← Back to Tools</button>
+        <button class="btn btn-secondary btn-sm" onclick="document.getElementById('tools-default').scrollIntoView()">📋 All Tools</button>
+      </div>
+      <div id="tool-content" class="tool-result"></div>
+    </div>
+  </div>
+</div>
+
+<div id="toast-container"></div>
+<div id="global-loader"></div>
+
+<script src="js/config.js"></script>
+<script src="js/main.js"></script>
+<script src="js/mentor.js"></script>
+<script>
+  function quickPrompt(text) {
+    const input = document.getElementById("chat-input");
+    if (input) { input.value = text; sendMessage(); }
+  }
+
+  // Show tool panel on right, hide tools-default
+  const _openTool = window.openTool;
+  window.openTool = async function(tool) {
+    document.getElementById("tools-default").classList.add("hidden");
+    document.getElementById("tool-panel").classList.remove("hidden");
+    await _openTool(tool);
+  };
+
+  window.closeTool = function() {
+    document.getElementById("tool-panel").classList.add("hidden");
+    document.getElementById("tools-default").classList.remove("hidden");
+  };
+
+  // Auto-resize chat textarea
+  document.getElementById("chat-input")?.addEventListener("input", function() {
+    this.style.height = "auto";
+    this.style.height = Math.min(this.scrollHeight, 120) + "px";
+  });
+</script>
+</body>
+</html>

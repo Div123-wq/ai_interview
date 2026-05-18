@@ -1,0 +1,230 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Dashboard — InterviewAI</title>
+  <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+
+<nav class="navbar">
+  <a class="nav-logo" href="index.html">🤖 InterviewAI</a>
+  <div class="nav-links">
+    <a href="dashboard.html" class="nav-link active">Dashboard</a>
+    <a href="interview.html" class="nav-link">Interview</a>
+    <a href="mentor.html" class="nav-link">Career Mentor</a>
+  </div>
+  <div class="nav-user">
+    <span class="nav-user-name" id="nav-user-name"></span>
+    <div class="nav-avatar" id="nav-avatar" title="Profile"></div>
+    <button class="btn btn-secondary btn-sm" id="logout-btn">Logout</button>
+  </div>
+</nav>
+
+<div class="page">
+  <!-- Header -->
+  <div class="page-header" style="display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:16px">
+    <div>
+      <h1 class="page-title" id="welcome-msg">Welcome back! 👋</h1>
+      <p class="page-subtitle">Track your progress and prepare for your next interview</p>
+    </div>
+    <div style="display:flex;gap:12px;flex-wrap:wrap">
+      <a href="interview.html" class="btn btn-primary">🎤 New Interview</a>
+      <a href="mentor.html" class="btn btn-secondary">🧭 Career Mentor</a>
+    </div>
+  </div>
+
+  <!-- Stats -->
+  <div class="grid-4" style="margin-bottom:32px" id="stats-grid">
+    <div class="card stat-card"><div class="stat-value" id="stat-total">—</div><div class="stat-label">Total Sessions</div></div>
+    <div class="card stat-card"><div class="stat-value" id="stat-avg">—</div><div class="stat-label">Avg Score</div></div>
+    <div class="card stat-card"><div class="stat-value" id="stat-best">—</div><div class="stat-label">Best Score</div></div>
+    <div class="card stat-card"><div class="stat-value" id="stat-done">—</div><div class="stat-label">Completed</div></div>
+  </div>
+
+  <!-- Profile + Sessions -->
+  <div class="grid-2" style="margin-bottom:32px;align-items:start">
+    <!-- Profile Card -->
+    <div class="card">
+      <div class="section-title">👤 Your Profile</div>
+      <div id="profile-view">
+        <div style="display:flex;align-items:center;gap:16px;margin-bottom:20px">
+          <div style="width:56px;height:56px;border-radius:50%;background:linear-gradient(135deg,var(--primary),var(--secondary));display:flex;align-items:center;justify-content:center;font-size:24px;font-weight:700" id="profile-avatar"></div>
+          <div>
+            <div style="font-size:18px;font-weight:700" id="profile-name"></div>
+            <div style="font-size:13px;color:var(--text2)" id="profile-email"></div>
+          </div>
+        </div>
+        <div style="display:flex;flex-direction:column;gap:12px">
+          <div style="background:var(--bg3);border-radius:8px;padding:12px">
+            <div style="font-size:11px;color:var(--text3);text-transform:uppercase;letter-spacing:1px;margin-bottom:4px">Target Role</div>
+            <div style="font-weight:600" id="profile-role">—</div>
+          </div>
+          <div style="background:var(--bg3);border-radius:8px;padding:12px">
+            <div style="font-size:11px;color:var(--text3);text-transform:uppercase;letter-spacing:1px;margin-bottom:4px">Experience</div>
+            <div style="font-weight:600" id="profile-exp">—</div>
+          </div>
+          <div style="background:var(--bg3);border-radius:8px;padding:12px">
+            <div style="font-size:11px;color:var(--text3);text-transform:uppercase;letter-spacing:1px;margin-bottom:6px">Skills</div>
+            <div id="profile-skills"></div>
+          </div>
+        </div>
+        <button class="btn btn-secondary btn-sm" style="margin-top:16px;width:100%" onclick="showEditProfile()">✏️ Edit Profile</button>
+      </div>
+
+      <!-- Edit Profile Form -->
+      <div id="profile-edit" style="display:none">
+        <div class="input-group"><label>Target Role</label><input id="edit-role" class="input-field" placeholder="Software Engineer"></div>
+        <div class="input-group"><label>Experience</label>
+          <select id="edit-exp" class="input-field">
+            <option value="fresher">Fresher / Student</option>
+            <option value="1-2 years">1-2 Years</option>
+            <option value="3-5 years">3-5 Years</option>
+            <option value="5+ years">5+ Years</option>
+          </select>
+        </div>
+        <div class="input-group"><label>Skills (comma separated)</label><input id="edit-skills" class="input-field" placeholder="Python, DSA, SQL..."></div>
+        <div style="display:flex;gap:8px">
+          <button class="btn btn-primary btn-sm" onclick="saveProfile()">Save</button>
+          <button class="btn btn-secondary btn-sm" onclick="cancelEditProfile()">Cancel</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- Quick Actions -->
+    <div class="card">
+      <div class="section-title">⚡ Quick Actions</div>
+      <div style="display:flex;flex-direction:column;gap:10px">
+        <a href="interview.html?role=Software Engineer&difficulty=intermediate&type=technical" class="btn btn-secondary" style="justify-content:flex-start;gap:12px">
+          <span style="font-size:20px">💻</span><div style="text-align:left"><div style="font-weight:600">SDE Technical Round</div><div style="font-size:12px;color:var(--text2)">DSA, System Design · 5 questions</div></div>
+        </a>
+        <a href="interview.html?role=Software Engineer&difficulty=beginner&type=behavioral" class="btn btn-secondary" style="justify-content:flex-start;gap:12px">
+          <span style="font-size:20px">🤝</span><div style="text-align:left"><div style="font-weight:600">HR / Behavioral Round</div><div style="font-size:12px;color:var(--text2)">STAR method practice · 5 questions</div></div>
+        </a>
+        <a href="interview.html?role=Data Analyst&difficulty=intermediate&type=mixed" class="btn btn-secondary" style="justify-content:flex-start;gap:12px">
+          <span style="font-size:20px">📊</span><div style="text-align:left"><div style="font-weight:600">Data Analyst Round</div><div style="font-size:12px;color:var(--text2)">SQL, Stats, Python · Mixed</div></div>
+        </a>
+        <a href="mentor.html" class="btn btn-secondary" style="justify-content:flex-start;gap:12px">
+          <span style="font-size:20px">🧭</span><div style="text-align:left"><div style="font-weight:600">Get Skill Gap Analysis</div><div style="font-size:12px;color:var(--text2)">Find what you're missing</div></div>
+        </a>
+        <a href="mentor.html" class="btn btn-secondary" style="justify-content:flex-start;gap:12px">
+          <span style="font-size:20px">📄</span><div style="text-align:left"><div style="font-weight:600">Review My Resume</div><div style="font-size:12px;color:var(--text2)">ATS score + keyword gaps</div></div>
+        </a>
+      </div>
+    </div>
+  </div>
+
+  <!-- Session History -->
+  <div class="card">
+    <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:20px">
+      <div class="section-title" style="margin:0">📋 Recent Interview Sessions</div>
+      <a href="interview.html" class="btn btn-primary btn-sm">+ New Session</a>
+    </div>
+    <div id="sessions-list">
+      <div style="text-align:center;padding:40px;color:var(--text3)">
+        <div style="font-size:40px;margin-bottom:12px">🎤</div>
+        <p>No sessions yet. Start your first mock interview!</p>
+        <a href="interview.html" class="btn btn-primary" style="margin-top:16px;display:inline-flex">Start Interview</a>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div id="toast-container"></div>
+<div id="global-loader"></div>
+
+<script src="js/config.js"></script>
+<script src="js/main.js"></script>
+<script>
+Auth.requireAuth();
+
+async function loadDashboard() {
+  const user = Auth.getUser();
+  if (user) {
+    document.getElementById("welcome-msg").textContent = `Welcome back, ${user.name}! 👋`;
+    document.getElementById("profile-name").textContent = user.name;
+    document.getElementById("profile-email").textContent = user.email;
+    document.getElementById("profile-role").textContent = user.target_role || "Not set";
+    document.getElementById("profile-exp").textContent = user.experience || "Not set";
+    document.getElementById("profile-avatar").textContent = user.name.charAt(0).toUpperCase();
+    const skillsEl = document.getElementById("profile-skills");
+    if (user.skills) {
+      skillsEl.innerHTML = user.skills.split(",").map(s => `<span class="skill-chip skill-required" style="font-size:12px;margin:2px">${s.trim()}</span>`).join("");
+    } else {
+      skillsEl.innerHTML = `<span style="color:var(--text3);font-size:13px">No skills added yet</span>`;
+    }
+  }
+
+  try {
+    const stats = await API.get("/api/interview/stats");
+    document.getElementById("stat-total").textContent = stats.total_sessions || 0;
+    document.getElementById("stat-avg").textContent = stats.overall_avg ? stats.overall_avg.toFixed(1) : "0.0";
+    document.getElementById("stat-best").textContent = stats.best_score ? stats.best_score.toFixed(1) : "0.0";
+    document.getElementById("stat-done").textContent = stats.completed_sessions || 0;
+  } catch { }
+
+  try {
+    const history = await API.get("/api/interview/history?limit=8");
+    renderSessions(history.sessions || []);
+  } catch { }
+}
+
+function renderSessions(sessions) {
+  const el = document.getElementById("sessions-list");
+  if (!sessions.length) return;
+  el.innerHTML = sessions.map(s => {
+    const color = scoreColor(s.avg_score);
+    const g = gradeLabel(s.avg_score);
+    return `<div class="session-row" onclick="viewSession(${s.id})">
+      <div style="width:40px;height:40px;border-radius:50%;background:${color}22;display:flex;align-items:center;justify-content:center;font-size:18px;font-weight:800;color:${color}">${g.grade}</div>
+      <div style="flex:1">
+        <div class="session-role">${s.role}</div>
+        <div class="session-meta">${s.difficulty} · ${s.interview_type} · ${formatDate(s.started_at)}</div>
+      </div>
+      <div style="text-align:right">
+        <div class="session-score" style="color:${color}">${s.avg_score?.toFixed(1)||"—"}</div>
+        <div style="font-size:11px;color:var(--text3)">${s.completed_questions}/${s.total_questions} done</div>
+      </div>
+      <span class="badge ${s.status==="completed"?"badge-success":"badge-warning"}">${s.status}</span>
+    </div>`;
+  }).join("");
+}
+
+function viewSession(id) {
+  // Could show a modal with session details; for now navigate to interview
+  showToast("Session detail view coming soon!", "info");
+}
+
+function showEditProfile() {
+  const user = Auth.getUser();
+  document.getElementById("edit-role").value = user?.target_role || "";
+  document.getElementById("edit-exp").value = user?.experience || "fresher";
+  document.getElementById("edit-skills").value = user?.skills || "";
+  document.getElementById("profile-view").style.display = "none";
+  document.getElementById("profile-edit").style.display = "block";
+}
+
+function cancelEditProfile() {
+  document.getElementById("profile-view").style.display = "block";
+  document.getElementById("profile-edit").style.display = "none";
+}
+
+async function saveProfile() {
+  const skills = document.getElementById("edit-skills").value;
+  const experience = document.getElementById("edit-exp").value;
+  const target_role = document.getElementById("edit-role").value;
+  try {
+    await API.put("/api/auth/profile", { skills, experience, target_role });
+    const user = Auth.getUser();
+    Auth.setSession(Auth.getToken(), { ...user, skills, experience, target_role });
+    showToast("Profile updated!", "success");
+    cancelEditProfile();
+    loadDashboard();
+  } catch (err) { showToast(err.message, "error"); }
+}
+
+document.addEventListener('DOMContentLoaded', loadDashboard);
+</script>
+</body>
+</html>

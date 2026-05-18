@@ -1,0 +1,29 @@
+```json
+[
+  {
+    "question": "Implement a function that takes a list of integers and returns a new list containing only the unique elements from the original list, maintaining their original order of appearance. Analyze its time and space complexity.",
+    "type": "technical",
+    "hint": "Key points to cover: Use of a hash set/map for efficient lookup to track seen elements, iterating through the list to maintain order, handling edge cases (empty list, all unique, all duplicates), performing a rigorous time and space complexity analysis (expecting O(N) time and O(N) space in the worst case)."
+  },
+  {
+    "question": "Design and implement a simple `Logger` class that supports different logging levels (e.g., `DEBUG`, `INFO`, `WARNING`, `ERROR`) and allows configuring the minimum logging level dynamically. Log messages should include a timestamp and the level. Demonstrate its usage with an example.",
+    "type": "technical",
+    "hint": "Key points to cover: Using an enum or constants for logging levels, constructor to set the initial minimum level, a method to dynamically update the minimum level, a `log()` method that formats and outputs messages based on the current level, inclusion of timestamp. Discussion points could include thread safety, extensibility (e.g., logging to files), and basic design principles (e.g., encapsulation)."
+  },
+  {
+    "question": "Imagine you are building a RESTful API endpoint to allow users to update their profile information (e.g., `name`, `email`, `address`). Describe the design choices you would make for this endpoint, including HTTP method, URL structure, request body, response codes, and error handling. What are the security considerations?",
+    "type": "technical",
+    "hint": "Key points to cover: Choice between HTTP PUT (full replacement) and PATCH (partial update) and their semantics; canonical URL structure (e.g., `/users/{id}`); JSON request body format; appropriate HTTP status codes for success (200 OK, 204 No Content), client errors (400 Bad Request, 401 Unauthorized, 403 Forbidden, 404 Not Found), and server errors (500 Internal Server Error); robust input validation; authentication and authorization mechanisms (e.g., JWT, OAuth) for security."
+  },
+  {
+    "question": "Design a caching layer for a web application that frequently reads user profiles from a database. Discuss the trade-offs of different caching strategies (e.g., in-memory vs. distributed cache), common eviction policies, and how you would handle cache invalidation when a user profile is updated.",
+    "type": "technical",
+    "hint": "Key points to cover: Types of caches (e.g., application-level in-memory like Guava Cache, distributed like Redis/Memcached) and their suitability; caching patterns (e.g., cache-aside, read-through, write-through/write-back); eviction policies (LRU, LFU, FIFO); cache invalidation techniques (TTL, explicit invalidation, publish/subscribe); discussion of consistency challenges between cache and database, and strategies to mitigate them."
+  },
+  {
+    "question": "Your microservice, responsible for processing user-uploaded images, is experiencing intermittent timeouts and high latency during peak hours. Describe your systematic approach to diagnose and resolve this issue. What tools and metrics would you use, and what potential bottlenecks would you investigate?",
+    "type": "technical",
+    "hint": "Key points to cover: Monitoring and logging (e.g., Prometheus/Grafana, ELK stack, CloudWatch) for critical metrics (CPU, memory, network I/O, disk I/O, queue depth, request latency, error rates); distributed tracing (e.g., Jaeger, Zipkin) to identify bottlenecks across services; potential areas of investigation: database performance, external API calls, I/O-bound operations (image processing, storage), CPU contention, network latency, resource saturation, inefficient algorithms, and poor scaling strategies. Discuss potential solutions like optimizing code, scaling resources, implementing circuit breakers, retries, and rate limiting."
+  }
+]
+```
