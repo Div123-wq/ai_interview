@@ -1,5 +1,9 @@
+import os
 import sys
 import traceback
+
+# Add the root directory to sys.path to allow backend imports on Vercel
+sys.path.insert(0, os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 
 try:
     from backend.app import create_app
