@@ -11,8 +11,9 @@ from backend.routes.mentor import mentor_bp
 load_dotenv()
 
 def create_app():
-    # Resolve frontend directory relative to the backend module
-    frontend_dir = os.path.join(os.path.dirname(os.path.dirname(__file__)), 'frontend')
+    # Resolve frontend directory - handle both local dev and Vercel deployment
+    app_dir = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+    frontend_dir = os.path.join(app_dir, 'frontend')
     
     app = Flask(__name__, static_folder=os.path.join(frontend_dir, 'js'), static_url_path='/js')
 
@@ -35,40 +36,33 @@ def create_app():
     @app.route('/css/<path:filename>')
     def serve_css(filename):
         css_dir = os.path.join(frontend_dir, 'css')
-        return send_from_directory(css_dir, filename)
+        if os.path.isdir(css_dir):
+            return send_from_directory(css_dir, filename)
+        return jsonify({"error": "CSS not found"}), 404
 
     # ── Frontend HTML Routes ────────────────────────────────────────────────
+    def serve_html_file(filename):
+        filepath = os.path.join(frontend_dir, filename)
+        if os.path.isfile(filepath):
+            with open(filepath, 'r', encoding='utf-8') as f:
+                return f.read(), 200, {'Content-Type': 'text/html; charset=utf-8'}
+        return jsonify({"error": f"{filename} not found"}), 404
+
     @app.route("/")
     def index():
-        index_path = os.path.join(frontend_dir, 'index.html')
-        if os.path.isfile(index_path):
-            return send_file(index_path)
-        return jsonify({
-            "status": "ok",
-            "message": "AI Interview Coach backend is running.",
-            "health_check": "/api/health"
-        }), 200
+        return serve_html_file('index.html')
 
     @app.route("/dashboard.html")
     def dashboard():
-        dashboard_path = os.path.join(frontend_dir, 'dashboard.html')
-        if os.path.isfile(dashboard_path):
-            return send_file(dashboard_path)
-        return jsonify({"error": "Dashboard not found"}), 404
+        return serve_html_file('dashboard.html')
 
     @app.route("/interview.html")
     def interview():
-        interview_path = os.path.join(frontend_dir, 'interview.html')
-        if os.path.isfile(interview_path):
-            return send_file(interview_path)
-        return jsonify({"error": "Interview page not found"}), 404
+        return serve_html_file('interview.html')
 
     @app.route("/mentor.html")
     def mentor():
-        mentor_path = os.path.join(frontend_dir, 'mentor.html')
-        if os.path.isfile(mentor_path):
-            return send_file(mentor_path)
-        return jsonify({"error": "Mentor page not found"}), 404
+        return serve_html_file('mentor.html')
 
     # ── Favicon & Static Files ────────────────────────────────────────────────
     @app.route("/favicon.ico")
